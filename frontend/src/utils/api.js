@@ -1,9 +1,29 @@
-// Central API base
 export const API = import.meta.env.VITE_API_BASE || "http://localhost:5000";
 
-// simple fetch wrapper
-export async function apiFetch(path, opts) {
-  const res = await fetch(API + path, opts);
-  const text = await res.text();
-  try { return JSON.parse(text); } catch(e) { return text; }
+export async function apiGet(path) {
+  const r = await fetch(`${API}${path}`);
+  return r.json();
+}
+
+export async function apiPost(path, body) {
+  const r = await fetch(`${API}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
+
+export async function apiPut(path, body) {
+  const r = await fetch(`${API}${path}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  return r.json();
+}
+
+export async function apiDelete(path) {
+  const r = await fetch(`${API}${path}`, { method: "DELETE" });
+  return r.json();
 }
