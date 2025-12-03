@@ -1,0 +1,22 @@
+:root{
+  --bg:#fff;
+  --muted:#666;
+  --border:#eee;
+  --accent:#0b5cff;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:var(--bg);color:#111}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.header-title{font-size:22px;margin:0}
+.header-sub{color:var(--muted);font-size:13px}
+.nav{display:flex;gap:14px;align-items:center}
+.btn{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff;border:none}
+.card{border:1px solid var(--border);padding:12px;border-radius:8px;background:#fff}
+.pill{padding:4px 8px;border-radius:999px;border:1px solid var(--border);font-size:12px;background:#f7f7f7}
+.lock{color:#b00}
+.menu-three{font-size:20px;background:transparent;border:none;cursor:pointer}
+.slide-drawer{position:fixed;top:0;left:0;height:100%;width:33%;max-width:360px;background:#fff;box-shadow:2px 0 12px rgba(0,0,0,0.12);z-index:1200;padding:18px;transition:transform .22s ease}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.22);z-index:1100}
+.search-input{padding:8px 10px;border-radius:8px;border:1px solid var(--border);width:100%}
