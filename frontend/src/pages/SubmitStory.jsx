@@ -1,57 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { API } from "../utils/api";
-import { useNavigate } from "react-router-dom";
+import { API, apiGet, apiPost } from "../utils/api";
 
-export default function SubmitStory(){
-  const [form, setForm] = useState({name:"", email:"", title:"", categories:"", content:""});
+export default function SubmitStory() {
+  const [cats, setCats] = useState([]);
+  const [selected, setSelected] = useState([]);
   const [captcha, setCaptcha] = useState(null);
-  const [msg, setMsg] = useState("");
-  const nav = useNavigate();
 
-  useEffect(()=>{ fetch((API||"") + "/api/captcha").then(r=>r.json()).then(j=>setCaptcha(j)).catch(()=>setCaptcha(null)); },[]);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
-  async function submit(e){
-    e.preventDefault();
-    if (!form.title.trim() || !form.content.trim()) { setMsg("Title and content required"); return; }
-    const user = window.prompt("Enter captcha result shown on form:");
-    if (!user) { setMsg("Captcha required"); return; }
+  useEffect(() => {
+    load();
+  }, []);
 
-    try {
-      const r = await fetch((API||"") + "/api/stories/submissions", {
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({
-          name: form.name, email: form.email,
-          title: form.title, categories: form.categories, content: form.content,
-          token: captcha?.token, code: user
-        })
-      });
-      const j = await r.json();
-      if (!r.ok) { setMsg(j.error || "Failed"); return; }
-      setMsg("Submitted. Admin will review.");
-      setTimeout(()=>nav("/"),1200);
-    } catch(e){ setMsg("Network error"); }
+  async function load() {
+    const cs = await apiGet("/api/categories");
+    setCats(cs || []);
+
+    const cap = await apiGet("/api/captcha");
+    setCaptcha(cap);
+  }
+
+  function toggleCategory(name) {
+    if (selected.includes(name))
+      setSelected(selected.filter((x) => x !== name));
+    else setSelected([...selected, name]);
+  }
+
+  async function submit() {
+    if (!title.trim()) return alert("Title required");
+    if (!content.trim()) return alert("Content required");
+
+    const ans = Number(prompt(`What is ${captcha.a} + ${captcha.b}?`));
+    if (isNaN(ans)) return alert("Invalid captcha");
+
+    const res = await apiPost("/api/submit-story", {
+      title,
+      content,
+      categories: selected,
+      captcha_answer: ans,
+    });
+
+    if (res.ok) {
+      alert("Story submitted!");
+      setTitle("");
+      setContent("");
+      setSelected([]);
+      load();
+    } else {
+      alert(res.error || "Error");
+    }
   }
 
   return (
-    <div className="container">
+    <div>
       <h2>Submit Story</h2>
-      <form onSubmit={submit}>
-        <input placeholder="Your name (optional)" value={form.name} onChange={e=>setForm({...form, name:e.target.value})} style={{padding:8,width:"100%",marginBottom:8}} />
-        <input placeholder="Email (optional)" value={form.email} onChange={e=>setForm({...form, email:e.target.value})} style={{padding:8,width:"100%",marginBottom:8}} />
-        <input placeholder="Story title" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} style={{padding:8,width:"100%",marginBottom:8}} />
-        <input placeholder="Categories (comma separated)" value={form.categories} onChange={e=>setForm({...form, categories:e.target.value})} style={{padding:8,width:"100%",marginBottom:8}} />
-        <textarea placeholder="Story content" value={form.content} onChange={e=>setForm({...form, content:e.target.value})} style={{padding:8,width:"100%",height:220,marginBottom:8}} />
-        <div style={{marginBottom:8}}>
-          <div style={{display:"inline-block",padding:"8px 12px",border:"1px solid var(--border)",borderRadius:8,marginRight:8,fontWeight:700}}>
-            {captcha ? captcha.display || (captcha.a+" + "+captcha.b) : "..." }
-          </div>
-          <button type="button" onClick={()=>{ fetch((API||"") + "/api/captcha").then(r=>r.json()).then(j=>setCaptcha(j)); }} className="btn">New Code</button>
-        </div>
 
-        <div><button className="btn btn-primary" type="submit">Submit Story</button></div>
-      </form>
+      <input
+        placeholder="Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        className="input"
+      />
 
-      <div style={{marginTop:12,color:"green"}}>{msg}</div>
+      <textarea
+        placeholder="Story Content"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        className="textarea"
+      />
+
+      <h3>Select Categories</h3>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {cats.map((c) => (
+          <button
+            key={c.id}
+            onClick={() => toggleCategory(c.name)}
+            className="chip"
+            style={{
+              background: selected.includes(c.name) ? "#000" : "#ddd",
+              color: selected.includes(c.name) ? "#fff" : "#000",
+            }}
+          >
+            {c.name}
+          </button>
+        ))}
+      </div>
+
+      <button className="btn-primary" onClick={submit} style={{ marginTop: 20 }}>
+        Submit Story
+      </button>
     </div>
-  )
+  );
 }
