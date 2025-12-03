@@ -1,100 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { API } from "../utils/api";
+import { API, apiGet, apiPost, apiPut, apiDelete } from "../utils/api";
 
-export default function AdminCategories(){
-  const [cats,setCats] = useState([]);
-  const [name,setName] = useState("");
-  const [editingId,setEditingId] = useState(null);
-  const [editName,setEditName] = useState("");
+export default function AdminCategories() {
+  const [cats, setCats] = useState([]);
+  const [newName, setNewName] = useState("");
 
-  useEffect(()=>{ load(); }, []);
+  const [editId, setEditId] = useState(null);
+  const [editName, setEditName] = useState("");
 
-  async function load(){
-    const r = await fetch((API||"") + "/api/categories");
-    const j = await r.json();
-    setCats(j||[]);
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function load() {
+    const res = await apiGet("/api/categories");
+    setCats(res || []);
   }
 
-  // CREATE
-  async function create(){
-    if (!name.trim()) return;
-    const r = await fetch((API||"") + "/api/categories", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ name })
-    });
-    if (r.ok) { setName(""); load(); }
-  }
-
-  // DELETE
-  async function remove(id){
-    if (!confirm("Delete category?")) return;
-    await fetch((API||"") + "/api/categories/"+id, { method:"DELETE" });
+  async function createCategory() {
+    if (!newName.trim()) return;
+    await apiPost("/api/categories", { name: newName });
+    setNewName("");
     load();
   }
 
-  // ENTER EDIT MODE
-  function startEdit(cat){
-    setEditingId(cat.id);
+  function startEdit(cat) {
+    setEditId(cat.id);
     setEditName(cat.name);
   }
 
-  // SAVE EDIT
-  async function saveEdit(id){
+  async function saveEdit(id) {
     if (!editName.trim()) return;
-    const r = await fetch((API||"") + "/api/categories/"+id, {
-      method:"PUT",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({ name: editName })
-    });
-    if (r.ok) {
-      setEditingId(null);
-      setEditName("");
-      load();
-    }
+    await apiPut(`/api/categories/${id}`, { name: editName });
+    setEditId(null);
+    setEditName("");
+    load();
+  }
+
+  async function remove(id) {
+    if (!confirm("Delete category?")) return;
+    await apiDelete(`/api/categories/${id}`);
+    load();
   }
 
   return (
-    <div className="container">
+    <div>
       <h2>Admin — Categories</h2>
 
-      {/* ADD CATEGORY */}
-      <div style={{marginBottom:12}}>
+      {/* Add category */}
+      <div style={{ marginBottom: 15 }}>
         <input
-          placeholder="New category"
-          value={name}
-          onChange={e=>setName(e.target.value)}
-          style={{padding:8,width:240,marginRight:8}}
+          placeholder="New category name"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          className="input"
         />
-        <button className="btn" onClick={create}>Add</button>
+        <button className="btn-primary" onClick={createCategory}>Add</button>
       </div>
 
-      {/* CATEGORY LIST */}
-      <div>
-        {cats.map(c=> (
-          <div key={c.id} className="card" style={{marginBottom:8}}>
-            
-            {editingId === c.id ? (
-              <>
-                <input
-                  value={editName}
-                  onChange={e=>setEditName(e.target.value)}
-                  style={{padding:6,width:"60%",marginRight:8}}
-                />
-                <button className="btn btn-primary" onClick={()=>saveEdit(c.id)}>Save</button>
-                <button className="btn" onClick={()=>setEditingId(null)} style={{marginLeft:6}}>Cancel</button>
-              </>
-            ) : (
-              <>
-                {c.name}
-                <button className="btn" style={{float:"right",marginLeft:6}} onClick={()=>remove(c.id)}>Delete</button>
-                <button className="btn" style={{float:"right"}} onClick={()=>startEdit(c)}>Edit</button>
-              </>
-            )}
+      {/* Category List */}
+      {cats.map((c) => (
+        <div key={c.id} className="card" style={{ marginBottom: 8 }}>
+          {editId === c.id ? (
+            <>
+              <input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="input"
+                style={{ width: "60%", marginRight: 10 }}
+              />
+              <button className="btn-primary" onClick={() => saveEdit(c.id)}>
+                Save
+              </button>
+              <button className="btn" onClick={() => setEditId(null)}>
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <span>{c.name}</span>
 
-          </div>
-        ))}
-      </div>
+              <button className="btn" style={{ float: "right" }} onClick={() => remove(c.id)}>
+                Delete
+              </button>
+              <button className="btn" style={{ float: "right" }} onClick={() => startEdit(c)}>
+                Edit
+              </button>
+            </>
+          )}
+        </div>
+      ))}
     </div>
-  )
+  );
 }
