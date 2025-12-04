@@ -1,8 +1,3 @@
-// ──────────────────────────────
-// StoryHub Frontend JS – FINAL VERSION
-// Stories + Categories + Search + Likes + Bookmarks (localStorage)
-// ──────────────────────────────
-
 let allStories = [];
 
 // Load everything
@@ -15,10 +10,22 @@ async function loadData() {
 
   renderStories(allStories);
   renderCategories(categories);
+  renderDropdownCategories(categories);
   updateBookmarkUI();
 }
 
-// Render stories with like/bookmark state
+function renderDropdownCategories(categories) {
+  const dropdown = document.getElementById('dropdownCategories');
+  dropdown.innerHTML = '';
+  categories.forEach(cat => {
+    const a = document.createElement('a');
+    a.href = '#';
+    a.textContent = cat;
+    a.onclick = () => filterByCategory(cat);
+    dropdown.appendChild(a);
+  });
+}
+
 function renderStories(stories) {
   const grid = document.getElementById('storiesGrid');
   grid.innerHTML = '';
@@ -45,36 +52,21 @@ function renderStories(stories) {
   });
 }
 
-// Like system
-function toggleLike(id) {
-  const current = localStorage.getItem(`like_${id}`) === 'true';
-  localStorage.setItem(`like_${id}`, (!current).toString());
-  loadData(); // refresh UI
-}
-function getLikeCount(id) {
-  return (localStorage.getItem(`like_${id}`) === 'true') ? 1 : 0;
-}
-
-// Bookmark system
-function toggleBookmark(id) {
-  const current = localStorage.getItem(`bookmark_${id}`) === 'true';
-  localStorage.setItem(`bookmark_${id}`, (!current).toString());
-  updateBookmarkUI();
-  loadData();
+function renderCategories(categories) {
+  const grid = document.getElementById('categoriesGrid');
+  grid.innerHTML = '';
+  categories.forEach(cat => {
+    const card = document.createElement('div');
+    card.className = 'story-card';
+    card.innerHTML = `
+      <h3>${cat}</h3>
+      <p>इस कैटेगरी में 10+ कहानियाँ</p>
+      <a href="#" class="read-btn" onclick="filterByCategory('${cat}')">देखें</a>
+    `;
+    grid.appendChild(card);
+  });
 }
 
-// Show bookmark counter in header (optional polish)
-function updateBookmarkUI() {
-  let header = document.querySelector('header h1');
-  const count = Object.keys(localStorage).filter(k => k.startsWith('bookmark_') && localStorage.getItem(k) === 'true').length;
-  if (count > 0) {
-    header.innerHTML = `StoryHub - अंतरवासना प्रो <span style="font-size:0.7em;color:#ffc107">⭐${count}</span>`;
-  } else {
-    header.textContent = 'StoryHub - अंतरवासना प्रो';
-  }
-}
-
-// Search + Category filter (now works properly)
 document.getElementById('searchInput').addEventListener('input', e => {
   const query = e.target.value.toLowerCase().trim();
   const filtered = query ? allStories.filter(s => s.title.toLowerCase().includes(query)) : allStories;
@@ -87,5 +79,45 @@ function filterByCategory(cat) {
   document.getElementById('searchInput').value = cat;
 }
 
-// Load on start
+function toggleLike(id) {
+  const current = localStorage.getItem(`like_${id}`) === 'true';
+  localStorage.setItem(`like_${id}`, (!current).toString());
+  loadData();
+}
+function getLikeCount(id) {
+  return (localStorage.getItem(`like_${id}`) === 'true') ? 1 : 0;
+}
+
+function toggleBookmark(id) {
+  const current = localStorage.getItem(`bookmark_${id}`) === 'true';
+  localStorage.setItem(`bookmark_${id}`, (!current).toString());
+  updateBookmarkUI();
+  loadData();
+}
+
+function updateBookmarkUI() {
+  let header = document.querySelector('.logo h1 a');
+  const count = Object.keys(localStorage).filter(k => k.startsWith('bookmark_') && localStorage.getItem(k) === 'true').length;
+  if (count > 0) {
+    header.innerHTML = `StoryHub <span style="font-size:0.7em;color:#ffc107">⭐${count}</span>`;
+  } else {
+    header.textContent = 'StoryHub';
+  }
+}
+
+function toggleMobileMenu() {
+  document.querySelector('.nav-list').classList.toggle('active');
+}
+document.querySelectorAll('.dropbtn').forEach(btn => {
+  btn.addEventListener('click', e => { e.preventDefault(); btn.parentElement.classList.toggle('active'); });
+});
+
+// NEW: Modals JS
+function showSubscribe() { document.getElementById('subModal').style.display = 'block'; }
+function showDonate() { document.getElementById('donateModal').style.display = 'block'; }
+function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+function subscribeNow() { alert('Redirecting to payment...'); localStorage.setItem('subscribed', 'true'); loadData(); } // Fake sub for testing; add real payment
+window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(e.target.id); };
+
+// Load
 window.onload = loadData;
