@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>स्टोरी सबमिट करें - StoryHub</title>
+  <title>स्टोरी सबमिट करें - Antarvasna Pro</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+
   <header class="site-header">
     <div class="logo"><h1><a href="/">StoryHub</a></h1></div>
+    <div class="hamburger">Menu</div>
     <nav class="main-nav">
       <ul class="nav-list">
         <li><a href="/">होम</a></li>
@@ -20,37 +22,56 @@
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
         <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
       </ul>
-      <div class="hamburger" onclick="toggleMobileMenu()">Menu</div>
     </nav>
   </header>
 
-  <main style="max-width:900px;margin:3rem auto;padding:2rem;">
-    <h1 style="color:#ff794d;text-align:center;">अपनी हॉट स्टोरी सबमिट करें</h1>
-    <div style="background:#f5f0d8;padding:2rem;border-radius:12px;margin-top:2rem;">
-      <form style="display:grid;gap:1rem;padding:1rem;">
-        <input type="text" placeholder="कहानी का टाइटल" required style="padding:1rem;font-size:1.1rem;border-radius:8px;border:1px solid #d2c17e;">
-        <select style="padding:1rem;font-size:1.1rem;border-radius:8px;" required>
+  <div class="action-buttons">
+    <button onclick="showSubscribe()">Subscribe Premium</button>
+    <button onclick="showDonate()">Donate & Support</button>
+  </div>
+
+  <main style="max-width:800px;margin:0 auto;padding:2rem;">
+    <h2>अपनी हॉट स्टोरी सबमिट करें</h2>
+
+    <div style="background:#fff;padding:2rem 1.5rem;border-radius:18px;box-shadow:0 10px 30px rgba(0,0,0,.15);margin-top:2rem;">
+      
+      <h3 style="color:#8b4513;text-align:center;margin-bottom:1.5rem;font-size:1.6rem;">गाइडलाइंस (पढ़ना जरूरी)</h3>
+      <ul style="background:#fdfaf0;padding:1.5rem;border-radius:12px;line-height:2;margin-bottom:2rem;font-size:1.05rem;">
+        <li>कहानी 100% ओरिजिनल होनी चाहिए</li>
+        <li>न्यूनतम 1200 शब्द</li>
+        <li>कोई underage / non-consent / animal content नहीं</li>
+        <li>24-48 घंटे में रिव्यू के बाद पब्लिश होगी</li>
+        <li>प्रीमियम स्टोरी बताएं तो mention करें</li>
+      </ul>
+
+      <form style="display:grid;gap:1.3rem;max-width:600px;margin:0 auto;">
+        <input type="text" placeholder="कहानी का टाइटल" required style="padding:1rem;font-size:1.1rem;border-radius:12px;border:2px solid #d2c17e;">
+        <select required style="padding:1rem;font-size:1.1rem;border-radius:12px;border:2px solid #d2c17e;">
           <option value="">कैटेगरी चुनें</option>
           <option>रिश्तो में चुदाई</option>
           <option>माँ की चुदाई</option>
-          <option>बहन की चुदाई</option>
+          <option>भेन की चुदाई</option>
           <option>भाभी की चुदाई</option>
           <option>चाची-मामी</option>
-          <!-- baaki auto aa jayengi -->
+          <option>देसी गाँव</option>
+          <option>पड़ोसन</option>
+          <option>कॉलेज गर्ल</option>
         </select>
-        <input type="email" placeholder="आपका ईमेल (प्रकाशन के लिए)" required style="padding:1rem;font-size:1.1rem;border-radius:8px;">
-        <textarea placeholder="पूरी कहानी यहाँ पेस्ट करें (कम से कम 1000 शब्द)" rows="20" required style="padding:1rem;font-size:1.1rem;border-radius:8px;font-family:inherit;"></textarea>
-        <button type="button" onclick="alert('कहानी रिव्यू के लिए भेज दी गई! 24-48 घंटे में पब्लिश होगी।')" 
-                style="background:#228b22;color:white;padding:1rem;font-size:1.2rem;border:none;border-radius:8px;cursor:pointer;">
+        <input type="email" placeholder="आपका ईमेल (प्रकाशन के लिए)" required style="padding:1rem;font-size:1.1rem;border-radius:12px;border:2px solid #d2c17e;">
+        <textarea placeholder="पूरा टेक्स्ट यहाँ पेस्ट करें..." rows="20" required style="padding:1rem;font-size:1.1rem;border-radius:12px;border:2px solid #d2c17e;font-family:inherit;"></textarea>
+        
+        <button type="button" onclick="alert('सबमिट हो गई! 24-48 घंटे में लाइव होगी');this.style.background='#228b22';this.textContent='सबमिट हुई ✓';"
+                style="background:#ff794d;color:#fff;padding:1.2rem;font-size:1.3rem;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
           सबमिट करें
         </button>
       </form>
     </div>
   </main>
 
-  <footer style="text-align:center;padding:3rem;color:#8b4513;">
-    © 2025 StoryHub
+  <footer style="text-align:center;padding:3rem;color:#8b4513;margin-top:4rem;">
+    © 2025 StoryHub - Antarvasna Pro
   </footer>
+
   <script src="/app.js"></script>
 </body>
 </html>
