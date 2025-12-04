@@ -5,7 +5,7 @@ async function loadData() {
     const storiesRes = await fetch('/data/stories.json');
     allStories = await storiesRes.json();
   } catch (e) {
-    allStories = []; // Fallback if JSON missing
+    allStories = []; // Fallback
   }
   
   try {
@@ -21,6 +21,7 @@ async function loadData() {
   updateBookmarkUI();
 }
 
+// Menu Dropdown Populate
 function renderDropdownCategories(categories) {
   const dropdown = document.getElementById('dropdownCategories');
   if (dropdown) {
@@ -35,6 +36,7 @@ function renderDropdownCategories(categories) {
   }
 }
 
+// Render Stories (with premium lock)
 function renderStories(stories) {
   const grid = document.getElementById('storiesGrid');
   if (grid) {
@@ -77,6 +79,7 @@ function renderStories(stories) {
   }
 }
 
+// Render Categories
 function renderCategories(categories) {
   const grid = document.getElementById('categoriesGrid');
   if (grid) {
@@ -94,10 +97,16 @@ function renderCategories(categories) {
   }
 }
 
-document.getElementById('searchInput')?.addEventListener('input', e => {
-  const query = e.target.value.toLowerCase().trim();
-  const filtered = query ? allStories.filter(s => s.title.toLowerCase().includes(query)) : allStories;
-  renderStories(filtered);
+// Search Filter
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', e => {
+      const query = e.target.value.toLowerCase().trim();
+      const filtered = query ? allStories.filter(s => s.title.toLowerCase().includes(query)) : allStories;
+      renderStories(filtered);
+    });
+  }
 });
 
 function filterByCategory(cat) {
@@ -106,6 +115,7 @@ function filterByCategory(cat) {
   document.getElementById('searchInput')?.value = cat;
 }
 
+// Like/Bookmark
 function toggleLike(id) {
   const current = localStorage.getItem(`like_${id}`) === 'true';
   localStorage.setItem(`like_${id}`, (!current).toString());
@@ -134,21 +144,47 @@ function updateBookmarkUI() {
   }
 }
 
+// MENU FUNCTIONS - FIXED (add event listeners on load)
 function toggleMobileMenu() {
-  document.querySelector('.nav-list')?.classList.toggle('active');
+  const navList = document.querySelector('.nav-list');
+  if (navList) {
+    navList.classList.toggle('active');
+  }
 }
-document.querySelectorAll('.dropbtn')?.forEach(btn => {
-  btn.addEventListener('click', e => { e.preventDefault(); btn.parentElement.classList.toggle('active'); });
+
+// Dropdown hover (CSS handles, but JS for mobile click)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      btn.parentElement.classList.toggle('active');
+    });
+  });
 });
 
-function showSubscribe() { document.getElementById('subModal').style.display = 'block'; }
-function showDonate() { document.getElementById('donateModal').style.display = 'block'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(e.target.id); };
+// Modals
+function showSubscribe() { 
+  const modal = document.getElementById('subModal');
+  if (modal) modal.style.display = 'block'; 
+}
+function showDonate() { 
+  const modal = document.getElementById('donateModal');
+  if (modal) modal.style.display = 'block'; 
+}
+function closeModal(id) { 
+  const modal = document.getElementById(id);
+  if (modal) modal.style.display = 'none'; 
+}
+window.onclick = e => { 
+  if (e.target.classList.contains('modal')) {
+    closeModal(e.target.id); 
+  }
+};
 
 function handlePremiumClick() {
   if (localStorage.getItem('subscribed') === 'true') {
-    document.getElementById('loginModal').style.display = 'block';
+    const loginModal = document.getElementById('loginModal');
+    if (loginModal) loginModal.style.display = 'block';
   } else {
     showSubscribe();
   }
@@ -163,8 +199,8 @@ function subscribePlan(plan) {
 }
 
 function loginUser() {
-  const user = document.getElementById('username').value;
-  const pass = document.getElementById('password').value;
+  const user = document.getElementById('username')?.value;
+  const pass = document.getElementById('password')?.value;
   if (user && pass) {
     alert('Logged in as ' + user);
     closeModal('loginModal');
@@ -179,7 +215,7 @@ function donateAmount(amount) {
 }
 
 function donateCustom() {
-  const amount = document.getElementById('customAmount').value;
+  const amount = document.getElementById('customAmount')?.value;
   if (amount > 0) {
     alert(`Redirecting to donate ₹${amount} via UPI...`);
     closeModal('donateModal');
@@ -188,12 +224,15 @@ function donateCustom() {
   }
 }
 
-function submitStory() { document.getElementById('submitStoryModal').style.display = 'block'; }
+function submitStory() { 
+  const modal = document.getElementById('submitStoryModal');
+  if (modal) modal.style.display = 'block'; 
+}
 function showBestStories() { alert('Loading best stories...'); }
 function showNewArrivals() { alert('Loading new arrivals...'); }
 function showPopular() { alert('Loading popular...'); }
 function showLekhak() { alert('Loading लेखक...'); }
 function showKahaniSangrah() { alert('Loading कहानी संग्रह A-Z...'); }
 
-// Load
-window.onload = loadData;
+// Load on DOM ready
+document.addEventListener('DOMContentLoaded', loadData);
