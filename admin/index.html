@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StoryHub Admin</title>
-  <link rel="stylesheet" href="/styles.css"> <!-- Reuse global CSS -->
+  <link rel="stylesheet" href="/styles.css">
   <style>
     #adminPanel { display: none; padding: 2rem; background: var(--card); border-radius: 12px; margin: 2rem auto; max-width: 800px; }
     textarea { width: 100%; height: 300px; background: #222; color: white; border: 1px solid var(--border); padding: 1rem; }
@@ -23,22 +23,23 @@
 
     <div id="adminPanel">
       <h2>Bulk Upload Stories</h2>
-      <p>Format: ===TITLE=== [title] ===CATEGORY=== [cat] ===CONTENT=== [full story] (repeat for multiple)</p>
+      <p>Format: ===TITLE=== [title] ===CATEGORY=== [cat] ===CONTENT=== [full story] (repeat)</p>
       <textarea id="bulkInput"></textarea>
       <button onclick="bulkUpload()">Upload All</button>
 
       <h2>Manage Stories</h2>
-      <ul id="storiesList" class="crud-list"></ul> <!-- JS populates -->
+      <ul id="storiesList" class="crud-list"></ul>
 
       <h2>Add/Edit Story</h2>
       <input id="storyId" type="hidden">
       <input id="storyTitle" placeholder="Title" style="width:100%; padding:1rem; margin-bottom:1rem;">
       <input id="storyCat" placeholder="Category" style="width:100%; padding:1rem; margin-bottom:1rem;">
       <textarea id="storyContent" placeholder="Full content"></textarea>
+      <label><input type="checkbox" id="storyPremium"> Premium (locked for non-subs)</label> <!-- NEW -->
       <button onclick="saveStory()">Save Story</button>
 
       <h2>Manage Categories</h2>
-      <ul id="catsList" class="crud-list"></ul> <!-- JS populates -->
+      <ul id="catsList" class="crud-list"></ul>
 
       <h2>Add/Edit Category</h2>
       <input id="catName" placeholder="Category Name" style="width:100%; padding:1rem;">
