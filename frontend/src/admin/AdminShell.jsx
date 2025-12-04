@@ -28,12 +28,13 @@ export default function AdminShell({ children }) {
       </div>
 
       {/* Navigation */}
-      <div style={{ padding: 12, background: "#eee" }}>
+      <div style={{ padding: 12, background: "#eaeaea" }}>
         <Link to="/admin/stories" className="admin-link">Stories</Link>
         <Link to="/admin/categories" className="admin-link">Categories</Link>
         <Link to="/admin/subscribers" className="admin-link">Subscribers</Link>
       </div>
 
+      {/* Page content */}
       <div style={{ padding: 15 }}>{children}</div>
     </div>
   );
