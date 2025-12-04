@@ -26,7 +26,6 @@ function renderDropdownCategories(categories) {
   });
 }
 
-// NEW: Render stories with premium lock
 function renderStories(stories) {
   const grid = document.getElementById('storiesGrid');
   grid.innerHTML = '';
@@ -130,8 +129,37 @@ document.querySelectorAll('.dropbtn').forEach(btn => {
 function showSubscribe() { document.getElementById('subModal').style.display = 'block'; }
 function showDonate() { document.getElementById('donateModal').style.display = 'block'; }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function subscribeNow() { alert('Redirecting to payment...'); localStorage.setItem('subscribed', 'true'); loadData(); }
 window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(e.target.id); };
+
+// NEW: Premium click
+function handlePremiumClick() {
+  if (localStorage.getItem('subscribed') === 'true') {
+    document.getElementById('loginModal').style.display = 'block';
+  } else {
+    showSubscribe();
+  }
+}
+
+// NEW: Subscribe plans
+function subscribePlan(plan) {
+  let price = { '1month': 199, '3months': 299, '6months': 499, '1year': 599 }[plan];
+  alert(`Redirecting to pay ₹${price} for ${plan}...`);
+  localStorage.setItem('subscribed', 'true');
+  loadData();
+  closeModal('subModal');
+}
+
+// NEW: Login (fake for now)
+function loginUser() {
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+  if (user && pass) {
+    alert('Logged in as ' + user);
+    closeModal('loginModal');
+  } else {
+    alert('Enter credentials');
+  }
+}
 
 // Load
 window.onload = loadData;
