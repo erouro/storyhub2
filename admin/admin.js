@@ -1,9 +1,4 @@
-// ──────────────────────────────
-// StoryHub Admin JS
-// Bulk upload, CRUD stories/cats, auto URL + sitemap
-// Uses JSON files + generates story HTML
-// ──────────────────────────────
-const PASSWORD = 'storyhub2025'; // Change if needed
+const PASSWORD = 'storyhub2025';
 
 function login() {
   if (document.getElementById('adminPass').value === PASSWORD) {
@@ -15,7 +10,6 @@ function login() {
   }
 }
 
-// Load stories from JSON
 async function loadStories() {
   const res = await fetch('/data/stories.json');
   const stories = await res.json();
@@ -24,12 +18,11 @@ async function loadStories() {
   stories.forEach(story => {
     const li = document.createElement('li');
     li.className = 'crud-item';
-    li.innerHTML = `${story.title} (${story.category}) <button onclick="editStory('${story.id}')">Edit</button> <button onclick="deleteStory('${story.id}')">Delete</button>`;
+    li.innerHTML = `${story.title} (${story.category}) [Premium: ${story.premium ? 'Yes' : 'No'}] <button onclick="editStory('${story.id}')">Edit</button> <button onclick="deleteStory('${story.id}')">Delete</button>`;
     list.appendChild(li);
   });
 }
 
-// Load categories
 async function loadCategories() {
   const res = await fetch('/data/categories.json');
   const cats = await res.json();
@@ -43,7 +36,6 @@ async function loadCategories() {
   });
 }
 
-// Bulk upload: Parse textarea → generate URLs + HTML + update JSON/sitemap
 async function bulkUpload() {
   const text = document.getElementById('bulkInput').value;
   const blocks = text.split('===TITLE===').slice(1);
@@ -57,11 +49,10 @@ async function bulkUpload() {
     const content = catContent[1]?.trim();
 
     if (title && category && content) {
-      const id = Date.now().toString(); // Simple unique ID
-      const url = title.toLowerCase().replace(/[^a-z0-9हिंदी]+/g, '-').replace(/^-|-$/g, '') + '.html'; // Auto URL with Hindi support
-      newStories.push({ id, title, category, content, url });
+      const id = Date.now().toString();
+      const url = title.toLowerCase().replace(/[^a-z0-9हिंदी]+/g, '-').replace(/^-|-$/g, '') + '.html';
+      newStories.push({ id, title, category, content, url, premium: false }); // NEW: Default premium false
       
-      // Generate story HTML (but since no server, alert to download + manual upload to /stories)
       const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="rating" content="adult"><title>${title} - StoryHub</title><link rel="stylesheet" href="/styles.css"></head><body><header><h1>${title}</h1></header><main><article>${content.replace(/\n/g, '<p>')}</article></main><footer><a href="/">Back to Home</a></footer></body></html>`;
       downloadFile(url, html);
     }
@@ -70,21 +61,21 @@ async function bulkUpload() {
   if (newStories.length) {
     await updateStoriesJSON(newStories, 'add');
     await updateSitemap();
-    alert(`${newStories.length} stories uploaded! Download HTMLs & push to /stories folder.`);
+    alert(`${newStories.length} stories uploaded!`);
     loadStories();
   }
 }
 
-// Save single story (add/edit)
 async function saveStory() {
   const id = document.getElementById('storyId').value || Date.now().toString();
   const title = document.getElementById('storyTitle').value.trim();
   const category = document.getElementById('storyCat').value.trim();
   const content = document.getElementById('storyContent').value.trim();
+  const premium = document.getElementById('storyPremium').checked; // Add checkbox in HTML below
   
   if (title && category && content) {
     const url = title.toLowerCase().replace(/[^a-z0-9हिंदी]+/g, '-').replace(/^-|-$/g, '') + '.html';
-    const story = { id, title, category, content, url };
+    const story = { id, title, category, content, url, premium };
     
     const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="rating" content="adult"><title>${title} - StoryHub</title><link rel="stylesheet" href="/styles.css"></head><body><header><h1>${title}</h1></header><main><article>${content.replace(/\n/g, '<p>')}</article></main><footer><a href="/">Back to Home</a></footer></body></html>`;
     downloadFile(url, html);
@@ -93,11 +84,10 @@ async function saveStory() {
     await updateSitemap();
     clearStoryForm();
     loadStories();
-    alert('Story saved! Push HTML to /stories.');
+    alert('Story saved!');
   }
 }
 
-// Edit story
 async function editStory(id) {
   const res = await fetch('/data/stories.json');
   const stories = await res.json();
@@ -107,10 +97,10 @@ async function editStory(id) {
     document.getElementById('storyTitle').value = story.title;
     document.getElementById('storyCat').value = story.category;
     document.getElementById('storyContent').value = story.content;
+    document.getElementById('storyPremium').checked = story.premium || false; // NEW
   }
 }
 
-// Delete story
 async function deleteStory(id) {
   if (confirm('Delete?')) {
     await updateStoriesJSON(id, 'delete');
@@ -119,7 +109,6 @@ async function deleteStory(id) {
   }
 }
 
-// Update stories.json (add/edit/delete)
 async function updateStoriesJSON(data, mode) {
   const res = await fetch('/data/stories.json');
   let stories = await res.json();
@@ -132,11 +121,9 @@ async function updateStoriesJSON(data, mode) {
     stories = stories.filter(s => s.id !== data);
   }
   
-  // Since no server, download updated JSON + manual replace
   downloadFile('stories.json', JSON.stringify(stories, null, 2));
 }
 
-// Similar for categories
 async function saveCategory() {
   const name = document.getElementById('catName').value.trim();
   if (name) {
@@ -176,7 +163,6 @@ async function updateCategoriesJSON(data, mode) {
   downloadFile('categories.json', JSON.stringify(cats, null, 2));
 }
 
-// Auto sitemap update
 async function updateSitemap() {
   const res = await fetch('/data/stories.json');
   const stories = await res.json();
@@ -194,7 +180,6 @@ async function updateSitemap() {
   downloadFile('sitemap.xml', xml);
 }
 
-// Download helper (since no server write)
 function downloadFile(filename, content) {
   const blob = new Blob([content], { type: 'text/plain' });
   const link = document.createElement('a');
@@ -203,10 +188,10 @@ function downloadFile(filename, content) {
   link.click();
 }
 
-// Clear form
 function clearStoryForm() {
   document.getElementById('storyId').value = '';
   document.getElementById('storyTitle').value = '';
   document.getElementById('storyCat').value = '';
   document.getElementById('storyContent').value = '';
+  document.getElementById('storyPremium').checked = false; // NEW
 }
