@@ -51,9 +51,9 @@ async function bulkUpload() {
     if (title && category && content) {
       const id = Date.now().toString();
       const url = title.toLowerCase().replace(/[^a-z0-9हिंदी]+/g, '-').replace(/^-|-$/g, '') + '.html';
-      newStories.push({ id, title, category, content, url, premium: false }); // NEW: Default premium false
+      newStories.push({ id, title, category, content, url, premium: false });
       
-      const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="rating" content="adult"><title>${title} - StoryHub</title><link rel="stylesheet" href="/styles.css"></head><body><header><h1>${title}</h1></header><main><article>${content.replace(/\n/g, '<p>')}</article></main><footer><a href="/">Back to Home</a></footer></body></html>`;
+      const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="rating" content="adult"><title>${title} - StoryHub</title><link rel="stylesheet" href="/styles.css"></head><body><header class="site-header"><div class="logo"><h1><a href="/">StoryHub</a></h1></div><nav class="main-nav"><ul class="nav-list"><li><a href="/">होम</a></li><li class="dropdown"><a href="#" class="dropbtn">कैटेगरी</a><div class="dropdown-content" id="dropdownCategories"></div></li><li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li><li><a href="#" onclick="submitStory()">स्टोरी सबमिट करें</a></li><li><a href="#" onclick="showBestStories()">बेस्ट स्टोरी</a></li><li><a href="#" onclick="showNewArrivals()">नई स्टोरी</a></li><li><a href="#" onclick="showPopular()">पॉपुलर</a></li><li><a href="#" onclick="showWriters()">राइटर्स</a></li><li><a href="#" onclick="showArchive()">आर्काइव (A-Z)</a></li><li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li><li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li></ul><div class="hamburger" onclick="toggleMobileMenu()">☰</div></nav></header><main><h1>${title}</h1><article>${content.replace(/\n/g, '<p>')}</article></main><footer>© 2025 StoryHub | Back to home</footer><script src="/app.js"></script></body></html>`;
       downloadFile(url, html);
     }
   }
@@ -71,13 +71,13 @@ async function saveStory() {
   const title = document.getElementById('storyTitle').value.trim();
   const category = document.getElementById('storyCat').value.trim();
   const content = document.getElementById('storyContent').value.trim();
-  const premium = document.getElementById('storyPremium').checked; // Add checkbox in HTML below
+  const premium = document.getElementById('storyPremium').checked;
   
   if (title && category && content) {
     const url = title.toLowerCase().replace(/[^a-z0-9हिंदी]+/g, '-').replace(/^-|-$/g, '') + '.html';
     const story = { id, title, category, content, url, premium };
     
-    const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="rating" content="adult"><title>${title} - StoryHub</title><link rel="stylesheet" href="/styles.css"></head><body><header><h1>${title}</h1></header><main><article>${content.replace(/\n/g, '<p>')}</article></main><footer><a href="/">Back to Home</a></footer></body></html>`;
+    const html = `<!DOCTYPE html><html lang="hi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="rating" content="adult"><title>${title} - StoryHub</title><link rel="stylesheet" href="/styles.css"></head><body><header class="site-header"><div class="logo"><h1><a href="/">StoryHub</a></h1></div><nav class="main-nav"><ul class="nav-list"><li><a href="/">होम</a></li><li class="dropdown"><a href="#" class="dropbtn">कैटेगरी</a><div class="dropdown-content" id="dropdownCategories"></div></li><li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li><li><a href="#" onclick="submitStory()">स्टोरी सबमिट करें</a></li><li><a href="#" onclick="showBestStories()">बेस्ट स्टोरी</a></li><li><a href="#" onclick="showNewArrivals()">नई स्टोरी</a></li><li><a href="#" onclick="showPopular()">पॉपुलर</a></li><li><a href="#" onclick="showWriters()">राइटर्स</a></li><li><a href="#" onclick="showArchive()">आर्काइव (A-Z)</a></li><li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li><li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li></ul><div class="hamburger" onclick="toggleMobileMenu()">☰</div></nav></header><main><h1>${title}</h1><article>${content.replace(/\n/g, '<p>')}</article></main><footer>© 2025 StoryHub | Back to home</footer><script src="/app.js"></script></body></html>`;
     downloadFile(url, html);
     
     await updateStoriesJSON([story], document.getElementById('storyId').value ? 'edit' : 'add');
@@ -97,7 +97,7 @@ async function editStory(id) {
     document.getElementById('storyTitle').value = story.title;
     document.getElementById('storyCat').value = story.category;
     document.getElementById('storyContent').value = story.content;
-    document.getElementById('storyPremium').checked = story.premium || false; // NEW
+    document.getElementById('storyPremium').checked = story.premium || false;
   }
 }
 
@@ -193,5 +193,5 @@ function clearStoryForm() {
   document.getElementById('storyTitle').value = '';
   document.getElementById('storyCat').value = '';
   document.getElementById('storyContent').value = '';
-  document.getElementById('storyPremium').checked = false; // NEW
+  document.getElementById('storyPremium').checked = false;
 }
