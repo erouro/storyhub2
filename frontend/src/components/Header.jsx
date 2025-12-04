@@ -1,79 +1,97 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { API, apiFetch } from "../utils/api";
+import { Link } from "react-router-dom";
+import { API } from "../utils/api";
 
-function getDeviceId(){
-  let id = localStorage.getItem("device_id");
-  if (!id) { id = "dev-" + Math.random().toString(36).slice(2); localStorage.setItem("device_id", id); }
-  return id;
-}
+export default function Header() {
+  const [cats, setCats] = useState([]);
+  const [open, setOpen] = useState(false); // category dropdown
 
-export default function Header(){
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isPremium, setIsPremium] = useState(false);
-  const [search, setSearch] = useState("");
-  const loc = useLocation();
+  useEffect(() => {
+    load();
+  }, []);
 
-  useEffect(()=>{
-    const dev = getDeviceId();
-    fetch((API||"") + "/api/subscribers/check?device_id=" + encodeURIComponent(dev))
-      .then(r=>r.json())
-      .then(j=> setIsPremium(!!j.active))
-      .catch(()=> setIsPremium(false));
-  }, [loc]);
+  async function load() {
+    const r = await fetch(`${API}/api/categories`);
+    const j = await r.json();
+    setCats(j || []);
+  }
 
   return (
-    <>
-      <div className="container" style={{paddingTop:14}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:16}}>
-          {/* left: site title */}
-          <div>
-            <Link to="/" style={{textDecoration:"none", color:"inherit"}}>
-              <h1 className="header-title" style={{margin:0}}>StoryHub</h1>
+    <div>
+      {/* TOP BAR */}
+      <div
+        style={{
+          background: "#111",
+          color: "#fff",
+          padding: "12px 15px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        {/* SITE NAME */}
+        <Link to="/" style={{ color: "#fff", fontSize: 20, fontWeight: "bold", textDecoration: "none" }}>
+          StoryHub
+        </Link>
+
+        {/* RIGHT BUTTONS */}
+        <div style={{ display: "flex", gap: 15 }}>
+          <Link to="/donate" style={{ color: "yellow", textDecoration: "none" }}>
+            Donate
+          </Link>
+
+          <Link to="/subscribe" style={{ color: "cyan", textDecoration: "none" }}>
+            Subscribe
+          </Link>
+        </div>
+      </div>
+
+      {/* MENU BAR */}
+      <div style={{ background: "#eee", padding: "10px", display: "flex", gap: 15 }}>
+        <Link to="/" className="menu-link">Home</Link>
+        <Link to="/new" className="menu-link">New Stories</Link>
+        <Link to="/popular" className="menu-link">Popular</Link>
+
+        {/* CATEGORY DROPDOWN */}
+        <span
+          className="menu-link"
+          style={{ cursor: "pointer" }}
+          onClick={() => setOpen(!open)}
+        >
+          Categories ▾
+        </span>
+      </div>
+
+      {/* CATEGORY DROPDOWN LIST */}
+      {open && (
+        <div
+          style={{
+            background: "#fff",
+            borderBottom: "1px solid #ddd",
+            padding: 10,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 10,
+          }}
+        >
+          {cats.map((c) => (
+            <Link
+              key={c.id}
+              to={`/category/${encodeURIComponent(c.name)}`}
+              className="chip"
+              style={{
+                background: "#ddd",
+                padding: "6px 12px",
+                borderRadius: 20,
+                textDecoration: "none",
+                color: "#000",
+              }}
+            >
+              {c.name}
             </Link>
-            <div className="header-sub" style={{marginTop:6}}>
-              <Link to="/donate" style={{marginRight:12}}>Donate</Link>
-              <Link to="/subscribe">Subscribe</Link>
-            </div>
-          </div>
-
-          {/* center: nav */}
-          <div style={{flex:1, textAlign:"center"}}>
-            <nav className="nav" style={{justifyContent:"center"}}>
-              <Link to="/" style={{padding:"6px 10px"}}>Home</Link>
-              <Link to="/?category=New%20Arrival" style={{padding:"6px 10px"}}>New Stories</Link>
-              <Link to="/popular" style={{padding:"6px 10px"}}>Popular</Link>
-              <Link to="/submit-story" style={{padding:"6px 10px"}}>Submit Story</Link>
-              <Link to="/premium-stories" style={{padding:"6px 10px"}}>
-                Premium Stories {isPremium ? null : <span className="lock">🔒</span>}
-              </Link>
-            </nav>
-          </div>
-
-          {/* right: search + menu */}
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <input className="search-input" placeholder="Search stories..." value={search} onChange={(e)=>setSearch(e.target.value)} style={{width:220}} onKeyDown={(e)=>{ if(e.key==="Enter"){ window.location = "/?q="+encodeURIComponent(search); }}} />
-            <button className="menu-three" onClick={()=>setDrawerOpen(true)}>⋮</button>
-          </div>
+          ))}
         </div>
-      </div>
-
-      {drawerOpen && <div className="backdrop" onClick={()=>setDrawerOpen(false)}></div>}
-      <div className="slide-drawer" style={{transform: drawerOpen ? "translateX(0%)":"translateX(-110%)"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <strong>Menu</strong>
-          <button className="menu-three" onClick={()=>setDrawerOpen(false)}>✕</button>
-        </div>
-        <div style={{marginTop:18, display:"flex", flexDirection:"column", gap:10}}>
-          <Link to="/" onClick={()=>setDrawerOpen(false)}>Home</Link>
-          <Link to="/?category=New%20Arrival" onClick={()=>setDrawerOpen(false)}>New Stories</Link>
-          <Link to="/popular" onClick={()=>setDrawerOpen(false)}>Popular</Link>
-          <Link to="/donate" onClick={()=>setDrawerOpen(false)}>Donate</Link>
-          <Link to="/subscribe" onClick={()=>setDrawerOpen(false)}>Subscribe</Link>
-          <Link to="/submit-story" onClick={()=>setDrawerOpen(false)}>Submit Story</Link>
-          <Link to="/admin/login" onClick={()=>setDrawerOpen(false)}>Admin</Link>
-        </div>
-      </div>
-    </>
-  )
+      )}
+    </div>
+  );
 }
