@@ -20,7 +20,7 @@
           <a href="#" class="dropbtn">कैटेगरी</a>
           <div class="dropdown-content" id="dropdownCategories"></div>
         </li>
-        <li><a href="#premium">प्रीमियम</a></li>
+        <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li> <!-- NEW: JS handler -->
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
         <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
       </ul>
@@ -42,23 +42,37 @@
     © 2025 StoryHub | 300+ देसी स्टोरी | हर दिन नई अपडेट
   </footer>
 
-  <!-- NEW: Subscribe Modal -->
+  <!-- Subscribe Modal -->
   <div id="subModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('subModal')">&times;</span>
       <h2>प्रीमियम सब्सक्राइब करें</h2>
-      <p>₹99/महीना: अनलिमिटेड प्रीमियम स्टोरी + ऐड-फ्री! (Razorpay/Stripe coming soon)</p>
-      <button onclick="subscribeNow()">अभी सब्सक्राइब करें</button>
+      <p>चुनें प्लान:</p>
+      <button onclick="subscribePlan('1month')">1 महीना - ₹199</button>
+      <button onclick="subscribePlan('3months')">3 महीने - ₹299</button>
+      <button onclick="subscribePlan('6months')">6 महीने - ₹499</button>
+      <button onclick="subscribePlan('1year')">1 साल - ₹599</button>
     </div>
   </div>
 
-  <!-- NEW: Donate Modal -->
+  <!-- Donate Modal -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('donateModal')">&times;</span>
       <h2>डोनेट करें - सपोर्ट करें</h2>
-      <p>UPI: storyhub@paytm | या ₹10-500</p>
-      <img src="upi-qr.png" alt="UPI QR" style="width:200px;"> <!-- Upload your QR to root as upi-qr.png -->
+      <p>UPI: storyhub@paytm</p>
+      <img src="upi-qr.png" alt="UPI QR" style="width:200px;">
+    </div>
+  </div>
+
+  <!-- NEW: Login Page for Subscribed (hidden modal) -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('loginModal')">&times;</span>
+      <h2>लॉगिन करें (प्रीमियम यूजर)</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="loginUser()">लॉगिन</button>
     </div>
   </div>
 
