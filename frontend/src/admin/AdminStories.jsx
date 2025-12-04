@@ -53,7 +53,7 @@ export default function AdminStories() {
     });
 
     if (r.ok) {
-      alert("Story created");
+      alert("Story added!");
       setTitle("");
       setExcerpt("");
       setContent("");
@@ -66,7 +66,6 @@ export default function AdminStories() {
 
   async function remove(id) {
     if (!confirm("Delete story?")) return;
-
     await fetch(`${API}/api/stories/${id}`, { method: "DELETE" });
     loadStories();
   }
@@ -75,19 +74,16 @@ export default function AdminStories() {
     <AdminShell>
       <h2>Manage Stories</h2>
 
-      {/* CREATE STORY FORM */}
-      <div className="card" style={{ marginBottom: 20 }}>
+      {/* ADD STORY FORM */}
+      <div className="card">
         <h3>Add Story</h3>
 
         <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-
         <input className="input" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} placeholder="Excerpt" />
-
         <input className="input" value={thumbnail} onChange={(e) => setThumbnail(e.target.value)} placeholder="Thumbnail URL" />
-
         <textarea className="textarea" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Content"></textarea>
 
-        <h4>Select Categories</h4>
+        <h4>Categories</h4>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           {cats.map((c) => (
             <button
@@ -105,23 +101,25 @@ export default function AdminStories() {
         </div>
 
         <label style={{ marginTop: 10 }}>
-          <input type="checkbox" checked={isPremium} onChange={() => setIsPremium(!isPremium)} />
-          &nbsp; Premium Story
+          <input type="checkbox" checked={isPremium} onChange={() => setIsPremium(!isPremium)} /> Premium Story
         </label>
 
-        <button className="btn-primary" onClick={createStory} style={{ marginTop: 15 }}>
+        <button className="btn-primary" style={{ marginTop: 15 }} onClick={createStory}>
           Add Story
         </button>
       </div>
 
       {/* STORY LIST */}
-      <h3>All Stories</h3>
+      <h3 style={{ marginTop: 30 }}>All Stories</h3>
+
       {stories.map((s) => (
         <div key={s.id} className="card" style={{ marginBottom: 10 }}>
-          <div><b>{s.title}</b></div>
-          <div style={{ fontSize: 13, color: "#555" }}>{s.categories?.join(", ")}</div>
+          <b>{s.title}</b>  
+          <div style={{ fontSize: 12, color: "#555" }}>{s.categories?.join(", ")}</div>
 
-          {s.is_premium && <span className="badge" style={{ background: "gold", color: "#000" }}>Premium</span>}
+          {s.is_premium && (
+            <span className="badge" style={{ background: "gold", color: "#000", marginRight: 10 }}>Premium</span>
+          )}
 
           <button className="btn" style={{ float: "right" }} onClick={() => remove(s.id)}>
             Delete
