@@ -45,23 +45,23 @@ export default function AdminSubscribers() {
           <div style={{ fontSize: 13, marginTop: 4 }}>
             {s.type === "donation" ? (
               <>
-                Amount: {s.amount} /-  
+                Amount: {s.amount}/-  
                 <br />
                 Name: {s.name}
               </>
             ) : (
               <>
-                Plan: {s.plan}  
-                <br/>
+                Plan: {s.plan}
+                <br />
                 Status: {s.status}
-                <br/>
+                <br />
                 Device: {s.device_id || "Not bound"}
               </>
             )}
           </div>
 
           {s.type === "subscription" && s.status !== "active" && (
-            <button className="btn-primary" style={{ marginTop: 10 }} onClick={() => verify(s.id)}>
+            <button className="btn-primary" onClick={() => verify(s.id)} style={{ marginTop: 10 }}>
               Verify Subscription
             </button>
           )}
