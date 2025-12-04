@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /stories/
+Allow: /sitemap.xml
+Disallow: /admin/
+
+Sitemap: https://storyhub2.pages.dev/sitemap.xml
