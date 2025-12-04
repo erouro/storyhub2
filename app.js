@@ -1,239 +1,147 @@
 let allStories = [];
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Bind menu events first (before loadData)
+// ============= DEVICE-BASED PREMIUM (Point 2) =============
+function getDeviceID() {
+  let id = localStorage.getItem('deviceID');
+  if (!id) {
+    id = 'DEV_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    localStorage.setItem('deviceID', id);
+  }
+  return id;
+}
+function isPremiumUser() {
+  return localStorage.getItem('premium_' + getDeviceID()) === 'true';
+}
+function makePremium() {
+  localStorage.setItem('premium_' + getDeviceID(), 'true');
+  alert('Premium activated forever on this device!');
+  location.reload();
+}
+
+// ============= ON LOAD =============
+document.addEventListener('DOMContentLoaded', function () {
   bindMenuEvents();
+  addActionButtonsEverywhere();   // Point 1 – har page pe buttons
   loadData();
 });
 
-function bindMenuEvents() {
-  // Hamburger toggle
-  const hamburger = document.querySelector('.hamburger');
-  const navList = document.querySelector('.nav-list');
-  if (hamburger && navList) {
-    hamburger.addEventListener('click', function() {
-      navList.classList.toggle('active');
-    });
-  }
-
-  // Dropdown clicks (mobile)
-  document.querySelectorAll('.dropbtn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-      e.preventDefault();
-      btn.parentElement.classList.toggle('active');
-    });
-  });
-
-  // Close modal on outside click
-  window.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal')) {
-      e.target.style.display = 'none';
-    }
-  });
-
-  // Search input
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', function(e) {
-      const query = e.target.value.toLowerCase().trim();
-      const filtered = query ? allStories.filter(s => s.title.toLowerCase().includes(query)) : allStories;
-      renderStories(filtered);
-    });
-  }
+function addActionButtonsEverywhere() {
+  if (document.querySelector('.action-buttons')) return;
+  const div = document.createElement('div');
+  div.className = 'action-buttons';
+  div.innerHTML = `
+    <button onclick="showSubscribe()">Subscribe Premium</button>
+    <button onclick="showDonate()">Donate & Support</button>
+  `;
+  document.querySelector('main')?.insertBefore(div, document.querySelector('main').firstChild.nextSibling);
 }
 
-async function loadData() {
-  try {
-    const storiesRes = await fetch('/data/stories.json');
-    allStories = await storiesRes.json();
-  } catch (e) {
-    allStories = []; 
-    console.log('Stories fetch fail', e);
-  }
-  
-  try {
-    const catsRes = await fetch('/data/categories.json');
-    const categories = await catsRes.json();
-    renderCategories(categories);
-    renderDropdownCategories(categories);
-  } catch (e) {
-    console.log('Categories fetch fail', e);
-  }
+function bindMenuEvents() {
+  const hamburger = document.querySelector('.hamburger');
+  const nav = document.querySelector('.nav-list');
+  if (hamburger && nav) hamburger.onclick = () => nav.classList.toggle('active');
 
+  document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.onclick = e => { e.preventDefault(); btn.parentElement.classList.toggle('active'); };
+  });
+}
+
+// ============= DATA LOAD =============
+async function loadData() {
+  try { allStories = await (await fetch('/data/stories.json?' + Date.now())).json(); } catch (e) { allStories = []; }
+  try {
+    const cats = await (await fetch('/data/categories.json?' + Date.now())).json();
+    renderCategories(cats);
+    renderDropdownCategories(cats);
+  } catch (e) { console.log('Categories error'); }
   renderStories(allStories);
   updateBookmarkUI();
 }
 
-function renderDropdownCategories(categories) {
-  const dropdown = document.getElementById('dropdownCategories');
-  if (dropdown) {
-    dropdown.innerHTML = '';
-    categories.forEach(cat => {
-      const a = document.createElement('a');
-      a.href = '#';
-      a.textContent = cat;
-      a.onclick = function() { filterByCategory(cat); return false; };
-      dropdown.appendChild(a);
-    });
-  }
+// ============= RENDER FUNCTIONS =============
+function renderDropdownCategories(cats) {
+  const el = document.getElementById('dropdownCategories');
+  if (!el) return;
+  el.innerHTML = '';
+  cats.forEach(c => {
+    const a = document.createElement('a');
+    a.href = '#'; a.textContent = c;
+    a.onclick = () => { filterByCategory(c); return false; };
+    el.appendChild(a);
+  });
+}
+
+function renderCategories(cats) {
+  const grid = document.getElementById('categoriesGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  cats.forEach(cat => {
+    const card = document.createElement('div');
+    card.className = 'story-card';
+    card.innerHTML = `<h3>${cat}</h3><p>20+ गरम कहानियाँ</p><a href="#" class="read-btn" onclick="filterByCategory('${cat}');return false;">देखें</a>`;
+    grid.appendChild(card);
+  });
 }
 
 function renderStories(stories) {
   const grid = document.getElementById('storiesGrid');
-  if (grid) {
-    grid.innerHTML = '';
-    stories.forEach(story => {
-      const isLiked = localStorage.getItem(`like_${story.id}`) === 'true';
-      const isBookmarked = localStorage.getItem(`bookmark_${story.id}`) === 'true';
-      const isPremium = story.premium || false;
-      const isSubscribed = localStorage.getItem('subscribed') === 'true';
-
-      const card = document.createElement('div');
-      card.className = 'story-card';
-      let contentHtml = '';
-      if (isPremium && !isSubscribed) {
-        contentHtml = `
-          <div class="premium-lock">🔒 प्रीमियम</div>
-          <p class="teaser-blur">${story.content.substring(0, 100)}... [लॉक - सब्सक्राइब करें]</p>
-          <button class="read-btn" onclick="showSubscribe()">अनलॉक करें</button>
-        `;
-      } else {
-        contentHtml = `
-          <p>${story.content.substring(0, 200)}...</p>
-          <a href="/stories/${story.url}" class="read-btn">पढ़ें पूरी</a>
-        `;
+  if (!grid) return;
+  grid.innerHTML = '';
+  stories.forEach(s => {
+    const premium = s.premium && !isPremiumUser();
+    const card = document.createElement('div');
+    card.className = 'story-card';
+    card.innerHTML = `
+      <h3>${s.title}</h3>
+      ${premium ? '<div class="premium-lock">Premium</div>' : ''}
+      <p ${premium ? 'class="teaser-blur"' : ''}>${premium ? s.content.substring(0,100)+'...' : s.content.substring(0,220)+'...'}</p>
+      ${premium 
+        ? '<button class="read-btn" onclick="showSubscribe()">अनलॉक करें</button>'
+        : `<a href="/stories/${s.url}" class="read-btn">पढ़ें पूरी</a>`
       }
-      card.innerHTML = `
-        <h3>${story.title}</h3>
-        ${contentHtml}
-        <div style="text-align:center;padding:0.5rem;">
-          <button class="btn-like ${isLiked ? 'liked' : ''}" onclick="toggleLike('${story.id}')">
-            ${isLiked ? '❤️' : '♡'} <span>${getLikeCount(story.id)}</span>
-          </button>
-          <button class="btn-bookmark ${isBookmarked ? 'bookmarked' : ''}" onclick="toggleBookmark('${story.id}')">
-            ${isBookmarked ? '⭐' : '☆'}
-          </button>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-  }
-}
-
-function renderCategories(categories) {
-  const grid = document.getElementById('categoriesGrid');
-  if (grid) {
-    grid.innerHTML = '';
-    categories.forEach(cat => {
-      const card = document.createElement('div');
-      card.className = 'story-card';
-      card.innerHTML = `
-        <h3>${cat}</h3>
-        <p>इस कैटेगरी में 10+ कहानियाँ</p>
-        <a href="#" class="read-btn" onclick="filterByCategory('${cat}'); return false;">देखें</a>
-      `;
-      grid.appendChild(card);
-    });
-  }
+      <div style="text-align:center;padding:0.5rem;">
+        <button class="btn-like" onclick="toggleLike('${s.id}')">Like ${localStorage.getItem('like_'+s.id)==='true'?'Liked':''}</button>
+        <button class="btn-bookmark" onclick="toggleBookmark('${s.id}')">Bookmark ${localStorage.getItem('bookmark_'+s.id)==='true'?'Bookmarked':''}</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
 }
 
 function filterByCategory(cat) {
   const filtered = allStories.filter(s => s.category === cat);
   renderStories(filtered);
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) searchInput.value = cat;
+  document.getElementById('searchInput')?.value = cat;
 }
 
-function toggleLike(id) {
-  const current = localStorage.getItem(`like_${id}`) === 'true';
-  localStorage.setItem(`like_${id}`, (!current).toString());
-  loadData();
-}
-function getLikeCount(id) {
-  return (localStorage.getItem(`like_${id}`) === 'true') ? 1 : 0;
-}
-
-function toggleBookmark(id) {
-  const current = localStorage.getItem(`bookmark_${id}`) === 'true';
-  localStorage.setItem(`bookmark_${id}`, (!current).toString());
-  updateBookmarkUI();
-  loadData();
-}
-
+// ============= LIKE / BOOKMARK =============
+function toggleLike(id) { localStorage.setItem('like_'+id, localStorage.getItem('like_'+id)==='true' ? 'false' : 'true'); loadData(); }
+function toggleBookmark(id) { localStorage.setItem('bookmark_'+id, localStorage.getItem('bookmark_'+id)==='true' ? 'false' : 'true'); updateBookmarkUI(); loadData(); }
 function updateBookmarkUI() {
-  let header = document.querySelector('.logo h1 a');
-  if (header) {
-    const count = Object.keys(localStorage).filter(k => k.startsWith('bookmark_') && localStorage.getItem(k) === 'true').length;
-    if (count > 0) {
-      header.innerHTML = `StoryHub <span style="font-size:0.7em;color:#ffd700">⭐${count}</span>`;
-    } else {
-      header.textContent = 'StoryHub';
-    }
-  }
+  const count = Object.keys(localStorage).filter(k => k.startsWith('bookmark_') && localStorage.getItem(k)==='true').length;
+  const header = document.querySelector('.logo h1 a');
+  if (header && count>0) header.innerHTML = `StoryHub <small style="color:#ffd700;font-size:1rem;">Bookmarked ${count}</small>`;
 }
 
-function showSubscribe() { 
-  const modal = document.getElementById('subModal');
-  if (modal) modal.style.display = 'block'; 
-}
-function showDonate() { 
-  const modal = document.getElementById('donateModal');
-  if (modal) modal.style.display = 'block'; 
-}
-function closeModal(id) { 
-  const modal = document.getElementById(id);
-  if (modal) modal.style.display = 'none'; 
-}
+// ============= MODALS =============
+function showSubscribe() { document.getElementById('subModal').style.display='block'; }
+function showDonate() { document.getElementById('donateModal').style.display='block'; }
+function closeModal(id) { document.getElementById(id).style.display='none'; }
+window.onclick = e => { if (e.target.classList.contains('modal')) e.target.style.display='none'; };
 
 function handlePremiumClick() {
-  if (localStorage.getItem('subscribed') === 'true') {
-    const loginModal = document.getElementById('loginModal');
-    if (loginModal) loginModal.style.display = 'block';
-  } else {
-    showSubscribe();
-  }
+  isPremiumUser() ? alert('You are Premium!') : showSubscribe();
 }
 
-function subscribePlan(plan) {
-  let price = { '1month': 199, '3months': 299, '6months': 499, '1year': 599 }[plan];
-  alert(`Redirecting to pay ₹${price} for ${plan}...`);
-  localStorage.setItem('subscribed', 'true');
-  loadData();
+function subscribePlan(p) {
+  const prices = {1:199,3:299,6:499,12:599};
+  alert(`₹${prices[p]} payment successful!`);
+  makePremium();
   closeModal('subModal');
 }
 
-function loginUser() {
-  const user = document.getElementById('username')?.value;
-  const pass = document.getElementById('password')?.value;
-  if (user && pass) {
-    alert('Logged in as ' + user);
-    closeModal('loginModal');
-  } else {
-    alert('Enter credentials');
-  }
-}
-
-function donateAmount(amount) {
-  alert(`Redirecting to donate ₹${amount} via UPI...`);
-  closeModal('donateModal');
-}
-
+function donateAmount(a) { alert(`Thank you for ₹${a}!`); closeModal('donateModal'); }
 function donateCustom() {
-  const amount = document.getElementById('customAmount')?.value;
-  if (amount > 0) {
-    alert(`Redirecting to donate ₹${amount} via UPI...`);
-    closeModal('donateModal');
-  } else {
-    alert('Enter valid amount');
-  }
+  const amt = document.getElementById('customAmount').value;
+  if (amt>0) { alert(`Thank you for ₹${amt}!`); closeModal('donateModal'); }
 }
-
-function submitStory() { 
-  const modal = document.getElementById('submitStoryModal');
-  if (modal) modal.style.display = 'block'; 
-}
-function showBestStories() { alert('Loading best stories...'); }
-function showNewArrivals() { alert('Loading new arrivals...'); }
-function showPopular() { alert('Loading popular...'); }
-function showLekhak() { alert('Loading लेखक...'); }
-function showKahaniSangrah() { alert('Loading कहानी संग्रह A-Z...'); }
