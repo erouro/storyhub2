@@ -34,3 +34,27 @@ export default function App(){
     </BrowserRouter>
   )
 }
+import Header from "./components/Header";
+import CategoryPage from "./pages/CategoryPage";
+import StoryPage from "./pages/StoryPage"; // must exist
+
+function App() {
+  return (
+    <>
+      <Header />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/new" element={<Home />} />
+        <Route path="/popular" element={<Home />} />
+
+        <Route path="/story/:id" element={<StoryPage />} />
+
+        {/* CATEGORY ROUTE */}
+        <Route path="/category/:name" element={<CategoryPage />} />
+
+        {/* ADMIN ROUTES here */}
+      </Routes>
+    </>
+  );
+}
