@@ -56,39 +56,26 @@ export default function AdminCategories() {
     <AdminShell>
       <h2>Manage Categories</h2>
 
-      {/* Add category */}
-      <div className="card" style={{ marginBottom: 20 }}>
-        <input
-          className="input"
-          placeholder="New category"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-        />
-        <button className="btn-primary" onClick={createCat} style={{ marginTop: 10 }}>
+      <div className="card">
+        <input className="input" placeholder="New category" value={newName} onChange={(e) => setNewName(e.target.value)} />
+        <button className="btn-primary" style={{ marginTop: 10 }} onClick={createCat}>
           Add
         </button>
       </div>
 
-      {/* List */}
       {cats.map((c) => (
         <div key={c.id} className="card" style={{ marginBottom: 10 }}>
           {editId === c.id ? (
             <>
-              <input
-                className="input"
-                style={{ width: "60%", marginBottom: 10 }}
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-              />
+              <input className="input" value={editName} onChange={(e) => setEditName(e.target.value)} />
               <button className="btn-primary" onClick={() => saveEdit(c.id)}>Save</button>
               <button className="btn" onClick={() => setEditId(null)}>Cancel</button>
             </>
           ) : (
             <>
               <b>{c.name}</b>
-              <button className="btn" style={{ float: "right" }} onClick={() => remove(c.id)}>
-                Delete
-              </button>
+
+              <button className="btn" style={{ float: "right" }} onClick={() => remove(c.id)}>Delete</button>
               <button className="btn" style={{ float: "right" }} onClick={() => { setEditId(c.id); setEditName(c.name); }}>
                 Edit
               </button>
