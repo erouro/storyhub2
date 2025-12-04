@@ -26,19 +26,34 @@ function renderDropdownCategories(categories) {
   });
 }
 
+// NEW: Render stories with premium lock
 function renderStories(stories) {
   const grid = document.getElementById('storiesGrid');
   grid.innerHTML = '';
   stories.forEach(story => {
     const isLiked = localStorage.getItem(`like_${story.id}`) === 'true';
     const isBookmarked = localStorage.getItem(`bookmark_${story.id}`) === 'true';
+    const isPremium = story.premium || false;
+    const isSubscribed = localStorage.getItem('subscribed') === 'true';
 
     const card = document.createElement('div');
     card.className = 'story-card';
+    let contentHtml = '';
+    if (isPremium && !isSubscribed) {
+      contentHtml = `
+        <div class="premium-lock">🔒 प्रीमियम</div>
+        <p class="teaser-blur">${story.content.substring(0, 100)}... [लॉक - सब्सक्राइब करें]</p>
+        <button class="read-btn" onclick="showSubscribe()">अनलॉक करें</button>
+      `;
+    } else {
+      contentHtml = `
+        <p>${story.content.substring(0, 200)}...</p>
+        <a href="/stories/${story.url}" class="read-btn">पढ़ें पूरी</a>
+      `;
+    }
     card.innerHTML = `
       <h3>${story.title}</h3>
-      <p>${story.content.substring(0, 200)}...</p>
-      <a href="/stories/${story.url}" class="read-btn">पढ़ें पूरी</a>
+      ${contentHtml}
       <div style="text-align:center;padding:0.5rem;">
         <button class="btn-like ${isLiked ? 'liked' : ''}" onclick="toggleLike('${story.id}')">
           ${isLiked ? '❤️' : '♡'} <span>${getLikeCount(story.id)}</span>
@@ -112,11 +127,10 @@ document.querySelectorAll('.dropbtn').forEach(btn => {
   btn.addEventListener('click', e => { e.preventDefault(); btn.parentElement.classList.toggle('active'); });
 });
 
-// NEW: Modals JS
 function showSubscribe() { document.getElementById('subModal').style.display = 'block'; }
 function showDonate() { document.getElementById('donateModal').style.display = 'block'; }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function subscribeNow() { alert('Redirecting to payment...'); localStorage.setItem('subscribed', 'true'); loadData(); } // Fake sub for testing; add real payment
+function subscribeNow() { alert('Redirecting to payment...'); localStorage.setItem('subscribed', 'true'); loadData(); }
 window.onclick = e => { if (e.target.classList.contains('modal')) closeModal(e.target.id); };
 
 // Load
