@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;700&family=Roboto:wght@400;500&display=swap');
 
 :root {
-  --bg: #e0d8ab; /* Base beige */
-  --card: #f5f0d8; /* Light cream */
-  --text: #4d3a00; /* Dark brown text */
-  --text-light: #8b4513; /* Brown light */
-  --accent-brown: #8b4513; /* Desi brown */
-  --accent-green: #228b22; /* Green for buttons */
-  --accent-gold: #ffd700; /* Gold */
+  --bg: #e0d8ab;
+  --card: #f5f0d8;
+  --text: #4d3a00;
+  --text-light: #8b4513;
+  --accent-brown: #8b4513;
+  --accent-green: #228b22;
+  --accent-gold: #ffd700;
   --border: #d2c17e;
 }
 
@@ -92,10 +92,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-  header h1 { font-size: 1.5rem; }
-  nav a { margin: 0 0.5rem; font-size: 0.9rem; }
   .stories-grid { max-width: 90%; }
-  #searchInput { font-size: 1rem; }
 }
 
 .btn-like, .btn-bookmark {
