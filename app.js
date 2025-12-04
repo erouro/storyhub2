@@ -1,11 +1,54 @@
 let allStories = [];
 
+document.addEventListener('DOMContentLoaded', function() {
+  // Bind menu events first (before loadData)
+  bindMenuEvents();
+  loadData();
+});
+
+function bindMenuEvents() {
+  // Hamburger toggle
+  const hamburger = document.querySelector('.hamburger');
+  const navList = document.querySelector('.nav-list');
+  if (hamburger && navList) {
+    hamburger.addEventListener('click', function() {
+      navList.classList.toggle('active');
+    });
+  }
+
+  // Dropdown clicks (mobile)
+  document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      btn.parentElement.classList.toggle('active');
+    });
+  });
+
+  // Close modal on outside click
+  window.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal')) {
+      e.target.style.display = 'none';
+    }
+  });
+
+  // Search input
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase().trim();
+      const filtered = query ? allStories.filter(s => s.title.toLowerCase().includes(query)) : allStories;
+      renderStories(filtered);
+    });
+  }
+}
+
 async function loadData() {
   try {
     const storiesRes = await fetch('/data/stories.json');
     allStories = await storiesRes.json();
   } catch (e) {
-    allStories = []; // Fallback
+    allStories = []; 
+    console.log('Stories fetch fail', e);
   }
   
   try {
@@ -14,14 +57,13 @@ async function loadData() {
     renderCategories(categories);
     renderDropdownCategories(categories);
   } catch (e) {
-    console.log('Categories load fail', e);
+    console.log('Categories fetch fail', e);
   }
 
   renderStories(allStories);
   updateBookmarkUI();
 }
 
-// Menu Dropdown Populate
 function renderDropdownCategories(categories) {
   const dropdown = document.getElementById('dropdownCategories');
   if (dropdown) {
@@ -30,13 +72,12 @@ function renderDropdownCategories(categories) {
       const a = document.createElement('a');
       a.href = '#';
       a.textContent = cat;
-      a.onclick = () => filterByCategory(cat);
+      a.onclick = function() { filterByCategory(cat); return false; };
       dropdown.appendChild(a);
     });
   }
 }
 
-// Render Stories (with premium lock)
 function renderStories(stories) {
   const grid = document.getElementById('storiesGrid');
   if (grid) {
@@ -79,7 +120,6 @@ function renderStories(stories) {
   }
 }
 
-// Render Categories
 function renderCategories(categories) {
   const grid = document.getElementById('categoriesGrid');
   if (grid) {
@@ -90,32 +130,20 @@ function renderCategories(categories) {
       card.innerHTML = `
         <h3>${cat}</h3>
         <p>इस कैटेगरी में 10+ कहानियाँ</p>
-        <a href="#" class="read-btn" onclick="filterByCategory('${cat}')">देखें</a>
+        <a href="#" class="read-btn" onclick="filterByCategory('${cat}'); return false;">देखें</a>
       `;
       grid.appendChild(card);
     });
   }
 }
 
-// Search Filter
-document.addEventListener('DOMContentLoaded', () => {
-  const searchInput = document.getElementById('searchInput');
-  if (searchInput) {
-    searchInput.addEventListener('input', e => {
-      const query = e.target.value.toLowerCase().trim();
-      const filtered = query ? allStories.filter(s => s.title.toLowerCase().includes(query)) : allStories;
-      renderStories(filtered);
-    });
-  }
-});
-
 function filterByCategory(cat) {
   const filtered = allStories.filter(s => s.category === cat);
   renderStories(filtered);
-  document.getElementById('searchInput')?.value = cat;
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.value = cat;
 }
 
-// Like/Bookmark
 function toggleLike(id) {
   const current = localStorage.getItem(`like_${id}`) === 'true';
   localStorage.setItem(`like_${id}`, (!current).toString());
@@ -144,25 +172,6 @@ function updateBookmarkUI() {
   }
 }
 
-// MENU FUNCTIONS - FIXED (add event listeners on load)
-function toggleMobileMenu() {
-  const navList = document.querySelector('.nav-list');
-  if (navList) {
-    navList.classList.toggle('active');
-  }
-}
-
-// Dropdown hover (CSS handles, but JS for mobile click)
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.dropbtn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      e.preventDefault();
-      btn.parentElement.classList.toggle('active');
-    });
-  });
-});
-
-// Modals
 function showSubscribe() { 
   const modal = document.getElementById('subModal');
   if (modal) modal.style.display = 'block'; 
@@ -175,11 +184,6 @@ function closeModal(id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none'; 
 }
-window.onclick = e => { 
-  if (e.target.classList.contains('modal')) {
-    closeModal(e.target.id); 
-  }
-};
 
 function handlePremiumClick() {
   if (localStorage.getItem('subscribed') === 'true') {
@@ -233,6 +237,3 @@ function showNewArrivals() { alert('Loading new arrivals...'); }
 function showPopular() { alert('Loading popular...'); }
 function showLekhak() { alert('Loading लेखक...'); }
 function showKahaniSangrah() { alert('Loading कहानी संग्रह A-Z...'); }
-
-// Load on DOM ready
-document.addEventListener('DOMContentLoaded', loadData);
