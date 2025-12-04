@@ -21,6 +21,12 @@
           <div class="dropdown-content" id="dropdownCategories"></div>
         </li>
         <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li>
+        <li><a href="#" onclick="submitStory()">स्टोरी सबमिट करें</a></li> <!-- NEW -->
+        <li><a href="#" onclick="showBestStories()">बेस्ट स्टोरी</a></li> <!-- NEW -->
+        <li><a href="#" onclick="showNewArrivals()">नई स्टोरी</a></li> <!-- NEW -->
+        <li><a href="#" onclick="showPopular()">पॉपुलर</a></li> <!-- NEW -->
+        <li><a href="#" onclick="showWriters()">राइटर्स</a></li> <!-- NEW -->
+        <li><a href="#" onclick="showArchive()">आर्काइव (A-Z)</a></li> <!-- NEW -->
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
         <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
       </ul>
@@ -55,7 +61,7 @@
     </div>
   </div>
 
-  <!-- Donate Modal UPDATED -->
+  <!-- Donate Modal -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('donateModal')">&times;</span>
@@ -82,6 +88,17 @@
       <input type="text" id="username" placeholder="Username">
       <input type="password" id="password" placeholder="Password">
       <button onclick="loginUser()">लॉगिन</button>
+    </div>
+  </div>
+
+  <!-- NEW: Submit Story Modal -->
+  <div id="submitStoryModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('submitStoryModal')">&times;</span>
+      <h2>स्टोरी सबमिट करें</h2>
+      <input type="text" placeholder="टाइटल">
+      <textarea placeholder="कहानी का पूरा टेक्स्ट..."></textarea>
+      <button onclick="alert('Story submitted for review!')">सबमिट</button>
     </div>
   </div>
 
