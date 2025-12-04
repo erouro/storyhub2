@@ -157,7 +157,6 @@ function loginUser() {
   }
 }
 
-// NEW: Donate amounts
 function donateAmount(amount) {
   alert(`Redirecting to donate ₹${amount} via UPI...`);
   closeModal('donateModal');
@@ -172,6 +171,14 @@ function donateCustom() {
     alert('Enter valid amount');
   }
 }
+
+// NEW: Menu functions (stubs – expand with real filters later)
+function submitStory() { document.getElementById('submitStoryModal').style.display = 'block'; }
+function showBestStories() { alert('Loading best stories...'); /* Filter by likes */ }
+function showNewArrivals() { alert('Loading new arrivals...'); /* Sort by date */ }
+function showPopular() { alert('Loading popular...'); /* Sort by views/likes */ }
+function showWriters() { alert('Loading writers...'); /* List authors */ }
+function showArchive() { alert('Loading archive A-Z...'); /* Sort alphabetically */ }
 
 // Load
 window.onload = loadData;
