@@ -20,7 +20,7 @@
           <a href="#" class="dropbtn">कैटेगरी</a>
           <div class="dropdown-content" id="dropdownCategories"></div>
         </li>
-        <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li> <!-- NEW: JS handler -->
+        <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li>
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
         <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
       </ul>
@@ -55,17 +55,26 @@
     </div>
   </div>
 
-  <!-- Donate Modal -->
+  <!-- Donate Modal UPDATED -->
   <div id="donateModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('donateModal')">&times;</span>
       <h2>डोनेट करें - सपोर्ट करें</h2>
       <p>UPI: storyhub@paytm</p>
+      <div class="donate-options">
+        <button onclick="donateAmount(10)">₹10</button>
+        <button onclick="donateAmount(20)">₹20</button>
+        <button onclick="donateAmount(50)">₹50</button>
+        <button onclick="donateAmount(100)">₹100</button>
+        <button onclick="donateAmount(200)">₹200</button>
+      </div>
+      <input type="number" id="customAmount" placeholder="अन्य अमाउंट डालें...">
+      <button onclick="donateCustom()">डोनेट करें</button>
       <img src="upi-qr.png" alt="UPI QR" style="width:200px;">
     </div>
   </div>
 
-  <!-- NEW: Login Page for Subscribed (hidden modal) -->
+  <!-- Login Modal -->
   <div id="loginModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('loginModal')">&times;</span>
