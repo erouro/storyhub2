@@ -21,12 +21,12 @@
           <div class="dropdown-content" id="dropdownCategories"></div>
         </li>
         <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li>
-        <li><a href="#" onclick="submitStory()">स्टोरी सबमिट करें</a></li> <!-- NEW -->
-        <li><a href="#" onclick="showBestStories()">बेस्ट स्टोरी</a></li> <!-- NEW -->
-        <li><a href="#" onclick="showNewArrivals()">नई स्टोरी</a></li> <!-- NEW -->
-        <li><a href="#" onclick="showPopular()">पॉपुलर</a></li> <!-- NEW -->
-        <li><a href="#" onclick="showWriters()">राइटर्स</a></li> <!-- NEW -->
-        <li><a href="#" onclick="showArchive()">आर्काइव (A-Z)</a></li> <!-- NEW -->
+        <li><a href="/submit-story.html">स्टोरी सबमिट करें</a></li>
+        <li><a href="#" onclick="showBestStories()">बेस्ट स्टोरी</a></li>
+        <li><a href="#" onclick="showNewArrivals()">नई स्टोरी</a></li>
+        <li><a href="#" onclick="showPopular()">पॉपुलर</a></li>
+        <li><a href="#" onclick="showLekhak()">लेखक</a></li>
+        <li><a href="#" onclick="showKahaniSangrah()">कहानी संग्रह (A-Z)</a></li>
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
         <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
       </ul>
@@ -91,7 +91,7 @@
     </div>
   </div>
 
-  <!-- NEW: Submit Story Modal -->
+  <!-- Submit Story Modal -->
   <div id="submitStoryModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal('submitStoryModal')">&times;</span>
