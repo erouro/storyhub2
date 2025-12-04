@@ -18,7 +18,7 @@
         <li><a href="/">होम</a></li>
         <li class="dropdown">
           <a href="#" class="dropbtn">कैटेगरी</a>
-          <div class="dropdown-content" id="dropdownCategories"></div> <!-- JS populates from categories.json -->
+          <div class="dropdown-content" id="dropdownCategories"></div>
         </li>
         <li><a href="#premium">प्रीमियम</a></li>
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
@@ -41,6 +41,26 @@
   <footer>
     © 2025 StoryHub | 300+ देसी स्टोरी | हर दिन नई अपडेट
   </footer>
+
+  <!-- NEW: Subscribe Modal -->
+  <div id="subModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('subModal')">&times;</span>
+      <h2>प्रीमियम सब्सक्राइब करें</h2>
+      <p>₹99/महीना: अनलिमिटेड प्रीमियम स्टोरी + ऐड-फ्री! (Razorpay/Stripe coming soon)</p>
+      <button onclick="subscribeNow()">अभी सब्सक्राइब करें</button>
+    </div>
+  </div>
+
+  <!-- NEW: Donate Modal -->
+  <div id="donateModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('donateModal')">&times;</span>
+      <h2>डोनेट करें - सपोर्ट करें</h2>
+      <p>UPI: storyhub@paytm | या ₹10-500</p>
+      <img src="upi-qr.png" alt="UPI QR" style="width:200px;"> <!-- Upload your QR to root as upi-qr.png -->
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
