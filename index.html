@@ -3,104 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="rating" content="adult">
-  <title>StoryHub - हिंदी सेक्स कहानी | अंतरवासना प्रो 2025</title>
-  <meta name="description" content="फ्री देसी हॉट स्टोरी पढ़ें - भाभी, चाची की चुदाई कहानियाँ | 300+ नई कहानियाँ">
+  <title>StoryHub - Antarvasna Pro 2025</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
-    <div class="logo">
-      <h1><a href="/">StoryHub</a></h1>
-    </div>
+    <div class="logo"><h1><a href="/">StoryHub</a></h1></div>
+    <div class="hamburger">☰</div>
     <nav class="main-nav">
       <ul class="nav-list">
         <li><a href="/">होम</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">कैटेगरी</a>
+        <li class="dropdown"><a href="#" class="dropbtn">कैटेगरी</a>
           <div class="dropdown-content" id="dropdownCategories"></div>
         </li>
         <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li>
         <li><a href="/submit-story.html">स्टोरी सबमिट करें</a></li>
-        <li><a href="#" onclick="showBestStories()">बेस्ट स्टोरी</a></li>
-        <li><a href="#" onclick="showNewArrivals()">नई स्टोरी</a></li>
-        <li><a href="#" onclick="showPopular()">पॉपुलर</a></li>
-        <li><a href="#" onclick="showLekhak()">लेखक</a></li>
-        <li><a href="#" onclick="showKahaniSangrah()">कहानी संग्रह (A-Z)</a></li>
         <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
         <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
       </ul>
-      <div class="hamburger" onclick="toggleMobileMenu()">☰</div>
     </nav>
   </header>
 
   <main>
-    <input type="search" id="searchInput" placeholder="कहानी खोजें: भाभी, चाची...">
-    
     <h2>नई कहानियाँ</h2>
     <div class="stories-grid" id="storiesGrid"></div>
-    
-    <h2 id="categories">कैटेगरी</h2>
-    <div class="stories-grid" id="categoriesGrid"></div>
+
+    <h2>कैटेगरी</h2>
+    <div id="categoriesGrid"></div>
   </main>
-
-  <footer>
-    © 2025 StoryHub | 300+ देसी स्टोरी | हर दिन नई अपडेट
-  </footer>
-
-  <!-- Subscribe Modal -->
-  <div id="subModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('subModal')">&times;</span>
-      <h2>प्रीमियम सब्सक्राइब करें</h2>
-      <p>चुनें प्लान:</p>
-      <button onclick="subscribePlan('1month')">1 महीना - ₹199</button>
-      <button onclick="subscribePlan('3months')">3 महीने - ₹299</button>
-      <button onclick="subscribePlan('6months')">6 महीने - ₹499</button>
-      <button onclick="subscribePlan('1year')">1 साल - ₹599</button>
-    </div>
-  </div>
-
-  <!-- Donate Modal -->
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('donateModal')">&times;</span>
-      <h2>डोनेट करें - सपोर्ट करें</h2>
-      <p>UPI: storyhub@paytm</p>
-      <div class="donate-options">
-        <button onclick="donateAmount(10)">₹10</button>
-        <button onclick="donateAmount(20)">₹20</button>
-        <button onclick="donateAmount(50)">₹50</button>
-        <button onclick="donateAmount(100)">₹100</button>
-        <button onclick="donateAmount(200)">₹200</button>
-      </div>
-      <input type="number" id="customAmount" placeholder="अन्य अमाउंट डालें...">
-      <button onclick="donateCustom()">डोनेट करें</button>
-      <img src="upi-qr.png" alt="UPI QR" style="width:200px;">
-    </div>
-  </div>
-
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('loginModal')">&times;</span>
-      <h2>लॉगिन करें (प्रीमियम यूजर)</h2>
-      <input type="text" id="username" placeholder="Username">
-      <input type="password" id="password" placeholder="Password">
-      <button onclick="loginUser()">लॉगिन</button>
-    </div>
-  </div>
-
-  <!-- Submit Story Modal -->
-  <div id="submitStoryModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('submitStoryModal')">&times;</span>
-      <h2>स्टोरी सबमिट करें</h2>
-      <input type="text" placeholder="टाइटल">
-      <textarea placeholder="कहानी का पूरा टेक्स्ट..."></textarea>
-      <button onclick="alert('Story submitted for review!')">सबमिट</button>
-    </div>
-  </div>
 
   <script src="app.js"></script>
 </body>
