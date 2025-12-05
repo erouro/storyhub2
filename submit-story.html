@@ -3,57 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Story - Antarvasna Pro</title>
+  <title>Submit Story</title>
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="logo"><h1><a href="/">StoryHub</a></h1></div>
-    <div class="hamburger">☰</div>
-    <nav class="main-nav">
-      <ul class="nav-list">
-        <li><a href="/">होम</a></li>
-        <li class="dropdown"><a href="#" class="dropbtn">कैटेगरी</a>
-          <div class="dropdown-content" id="dropdownCategories"></div>
-        </li>
-        <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li>
-        <li><a href="/submit-story.html">स्टोरी सबमिट करें</a></li>
-        <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
-        <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
-      </ul>
-    </nav>
-  </header>
+  <!-- Same Header + Sidebar as index.html -->
 
-  <main>
-    <div class="action-buttons">
-      <button onclick="showSubscribe()">Subscribe Premium</button>
-      <button onclick="showDonate()">Donate & Support</button>
-    </div>
+  <div class="submit-sheet">
+    <div style="text-align:center;color:#ff6b35;font-size:1.8rem;margin-bottom:1rem;">स्टोरी सबमिट करें</div>
+    <details open style="margin:1rem 0;">
+      <summary style="font-size:1.3rem;color:#fff;background:#334155;padding:1rem;cursor:pointer;">गाइडलाइंस पढ़ें</summary>
+      <div style="background:#1e293b;padding:1.5rem;border-radius:8px;color:#cbd5e1;">
+        <ul style="line-height:2;">
+          <li>कहानी ओरिजिनल होनी चाहिए</li>
+          <li>न्यूनतम 1500 शब्द</li>
+          <li>कोई illegal या underage content नहीं</li>
+          <li>48 घंटे में रिव्यू</li>
+          <li>Hindi/English दोनों OK</li>
+        </ul>
+      </div>
+    </details>
 
-    <h2 style="text-align:center;">अपनी हॉट स्टोरी सबमिट करें</h2>
-    
-    <div style="background:#fff;padding:2.5rem;max-width:800px;margin:2rem auto;border-radius:20px;box-shadow:0 12px 35px rgba(0,0,0,0.15);">
-      <h3 style="text-align:center;color:#8b4513;margin-bottom:1.8rem;font-size:1.7rem;">जरूरी गाइडलाइंस</h3>
-      <ul style="background:#fdfaf0;padding:2rem;border-radius:14px;line-height:2.1;font-size:1.1rem;margin-bottom:2.5rem;">
-        <li>कहानी 100% ओरिजिनल होनी चाहिए</li>
-        <li>न्यूनतम 1200 शब्द</li>
-        <li>कोई underage / non-consent / animal content नहीं</li>
-        <li>24-48 घंटे में रिव्यू के बाद पब्लिश होगी</li>
-        <li>प्रीमियम स्टोरी बताएं तो mention करें</li>
-      </ul>
+    <form style="display:grid;gap:1.2rem;">
+      <input type="text" placeholder="टाइटल" required>
+      <select required>
+        <option value="">कैटेगरी</option>
+        <option>भाभी की चुदाई</option>
+        <option>माँ की चुदाई</option>
+        <!-- 25+ categories -->
+      </select>
+      <input type="email" placeholder="ईमेल" required>
+      <textarea placeholder="कहानी यहाँ पेस्ट करें..." rows="15" required></textarea>
+      <button type="button" onclick="alert('Submitted!');" style="background:#ff6b35;color:#fff;padding:1.2rem;border-radius:12px;font-size:1.3rem;">सबमिट करें</button>
+    </form>
+  </div>
 
-      <form style="display:grid;gap:1.4rem;max-width:620px;margin:0 auto;">
-        <input type="text" placeholder="कहानी का टाइटल" required style="padding:1.1rem;font-size:1.15rem;border-radius:12px;border:2px solid #d2c17e;background:#fff;">
-        <select required style="padding:1.1rem;font-size:1.15rem;border-radius:12px;border:2px solid #d2c17e;">
-          <option value="">कैटेगरी चुनें</option>
-          <option>रिश्तो में चुदाई</option>
-          <option>माँ की चुदाई</option>
-          <option>भेन की चुदाई</option>
-          <option>भाभी की चुदाई</option>
-          <option>चाची-मामी</option>
-          <option>देसी गाँव</option>
-          <option>पड़ोसन</option>
-          <option>कॉलेज गर्ल</option>
-          <option>अन्य</option>
-        </select>
-        <input type="email" placeholder="आपका ईमेल (जरूरी)" required style="padding:1.1rem;font-size:1.15rem;border
+  <script src="/app.js"></script>
+</body>
+</html>
