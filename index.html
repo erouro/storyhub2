@@ -3,78 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="rating" content="adult">
+  <meta name="rating" content="RTA-5042-1996-2000-2001">
   <title>StoryHub - Antarvasna Pro 2025</title>
-  <meta name="description" content="फ्री देसी हॉट स्टोरी पढ़ें - भाभी, चाची की चुदाई कहानियाँ | 300+ नई कहानियाँ">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="logo"><h1><a href="/">StoryHub</a></h1></div>
-    <div class="hamburger">☰</div>
-    <nav class="main-nav">
-      <ul class="nav-list">
-        <li><a href="/">होम</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropbtn">कैटेगरी</a>
-          <div class="dropdown-content" id="dropdownCategories"></div>
-        </li>
-        <li><a href="#" onclick="handlePremiumClick()">प्रीमियम</a></li>
-        <li><a href="/submit-story.html">स्टोरी सबमिट करें</a></li>
-        <li><button class="subscribe-btn" onclick="showSubscribe()">सब्सक्राइब</button></li>
-        <li><button class="donate-btn" onclick="showDonate()">डोनेट</button></li>
-      </ul>
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+  
+  <!-- Left Sidebar Menu -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>StoryHub</h2>
+      <span class="close-sidebar">✕</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/">होम</a>
+      <a href="#" onclick="showNewStories()">नई कहानियाँ</a>
+      <a href="#" onclick="showPopular()">पॉपुलर स्टोरी</a>
+      <details open>
+        <summary>कैटेगरी</summary>
+        <div id="sidebarCategories"></div>
+      </details>
+      <a href="#" onclick="showLekhak()">लेखक</a>
+      <a href="#" onclick="showKahaniSangrah()">कहानी संग्रह (A-Z)</a>
+      <a href="#" onclick="handlePremiumClick()">प्रीमियम स्टोरी</a>
+      <a href="/submit-story.html">स्टोरी सबमिट करें</a>
+      <a href="#" onclick="showSubscribe()">सब्सक्राइब</a>
+      <a href="#" onclick="showDonate()">डोनेट</a>
+      <a href="#">संपर्क करें</a>
     </nav>
+  </aside>
+
+  <!-- Main Header -->
+  <header class="main-header">
+    <div class="hamburger" onclick="toggleSidebar()">☰</div>
+    <div class="logo"><h1><a href="/">StoryHub - Antarvasna Pro</a></h1></div>
+    <div class="action-buttons">
+      <button onclick="showSubscribe()">Subscribe</button>
+      <button onclick="showDonate()">Donate</button>
+    </div>
   </header>
 
   <main>
-    <div class="action-buttons">
-      <button onclick="showSubscribe()">Subscribe Premium</button>
-      <button onclick="showDonate()">Donate & Support</button>
-    </div>
-
     <h2>नई कहानियाँ</h2>
-    <input type="search" id="searchInput" placeholder="कहानी खोजें: भाभी, चाची...">
+    <input type="search" id="searchInput" placeholder="कहानी खोजें...">
     <div class="stories-grid" id="storiesGrid"></div>
-
-    <h2>कैटेगरी</h2>
-    <div id="categoriesGrid"></div>
   </main>
-
-  <footer>
-    © 2025 StoryHub | 300+ देसी स्टोरी | हर दिन नई अपडेट
-  </footer>
-
-  <!-- Subscribe Modal -->
-  <div id="subModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('subModal')">&times;</span>
-      <h2>प्रीमियम सब्सक्राइब करें</h2>
-      <p>चुनें अपना प्लान:</p>
-      <button onclick="subscribePlan('1month')">1 महीना - ₹199</button>
-      <button onclick="subscribePlan('3months')">3 महीने - ₹299</button>
-      <button onclick="subscribePlan('6months')">6 महीने - ₹499</button>
-      <button onclick="subscribePlan('1year')">1 साल - ₹599</button>
-    </div>
-  </div>
-
-  <!-- Donate Modal -->
-  <div id="donateModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeModal('donateModal')">&times;</span>
-      <h2>डोनेट करें - सपोर्ट करें</h2>
-      <p>UPI: storyhub@paytm</p>
-      <div class="donate-options">
-        <button onclick="donateAmount(10)">₹10</button>
-        <button onclick="donateAmount(20)">₹20</button>
-        <button onclick="donateAmount(50)">₹50</button>
-        <button onclick="donateAmount(100)">₹100</button>
-        <button onclick="donateAmount(200)">₹200</button>
-      </div>
-      <input type="number" id="customAmount" placeholder="अन्य अमाउंट डालें...">
-      <button onclick="donateCustom()">डोनेट करें</button>
-    </div>
-  </div>
 
   <script src="app.js"></script>
 </body>
